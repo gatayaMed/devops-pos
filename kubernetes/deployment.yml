@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: counter-deployment
+
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: counter
+
+  template:
+    metadata:
+      labels:
+        app: counter
+
+    spec:
+      containers:
+        - name: counter-app
+          image: counter-app:v1010
+          ports:
+            - containerPort: 5000
+          env:
+            - name: COUNT_FILE_PATH
+              value: /app/data/count.txt
+          volumeMounts:
+            - name: counter-storage
+              mountPath: /app/data
+
+      volumes:
+        - name: counter-storage
+          hostPath:
+            path: /tmp/counter-data
