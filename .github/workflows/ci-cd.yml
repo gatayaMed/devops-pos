@@ -35,9 +35,9 @@ jobs:
       steps:
          - name: Checkout code
            uses: actions/checkout@v3
-           
+
          - name: Checkout Docker image
-           run docker build -t counter-app:${{ github.sha}} .
+           run: docker build -t counter-app:${{ github.sha}} .
 
          - name: Run container test 
            run: | 
