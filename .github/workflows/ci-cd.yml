@@ -1,0 +1,47 @@
+name: CI/CD PIPELINE
+
+on:
+   push:
+      branches: [ main ]
+   pull_request: 
+      branches: [ main ]   
+
+jobs:
+   test:
+     runs-on: ubuntu-latest
+     steps:
+        - name: Checkout code 
+          uses: actions/checkout@v3
+
+        - name: Setup Python 
+          uses: actions/setup-python@v4
+          with:
+            python-version: '3.11'
+
+        - name: install dependencies 
+          run: |
+             cd app 
+             pip install -r requirements.txt
+
+        - name: Run Tests
+          run: | 
+               cd app
+               python -c "import flask; print('Flask OK')"
+               python -c "open('test.txt', 'w').write('test')"  # simple test        
+
+   build-docker:
+      needs: test
+      runs-on: ubuntu-latest
+      steps:
+         - name: Checkout code
+           uses: actions/checkout@v3
+           
+         - name: Checkout Docker image
+           run docker build -t counter-app:${{ github.sha}} .
+
+         - name: Run container test 
+           run: | 
+              docker run -d -p 5000:5000 --name test-counter counter-app:${{ githhub.sha }}
+              sleep 5
+              curl --fail http://localhost:5000 || exit 1 
+              docker stoop test-counter        
