@@ -1,0 +1,6 @@
+app/venv
+app/__pycache__/
+app/count.txt
+*.pyc 
+.env
+.DS_STORE
