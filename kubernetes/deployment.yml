@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: counter-app
-          image: counter-app:v1010
+          image: counter-app:v10
           ports:
             - containerPort: 5000
           env:
